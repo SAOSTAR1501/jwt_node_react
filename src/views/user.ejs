@@ -14,42 +14,52 @@
   </head>
   <body>
     <div class="user-infor-container">
-      <div class="container">
-        <div class="row">
-          <div class="mb-3 col-6 mt-3">
-            <label for="email" class="form-label">Email address</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              aria-describedby="emailHelp"
-            />
-          </div>
+      <form method="POST" action="/user/create-user">
+        <div class="container">
+          <div class="row">
+            <div class="mb-3 col-6 mt-3">
+              <label for="email" class="form-label">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+            </div>
 
-          <div class="col-6"></div>
+            <div class="col-6"></div>
 
-          <div class="mb-3 col-6">
-            <label for="username" class="form-label">Username</label>
-            <input
-              type="text"
-              class="form-control username"
-              id="username"
-              aria-describedby="emailHelp"
-            />
-          </div>
+            <div class="mb-3 col-6">
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control username"
+                id="username"
+                name="username"
+                required
+              />
+            </div>
 
-          <div class="col-6"></div>
+            <div class="col-6"></div>
 
-          <div class="mb-3 col-6">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" />
-          </div>
+            <div class="mb-3 col-6">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+            </div>
 
-          <div class="col-12">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">Create User</button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </body>
 </html>
