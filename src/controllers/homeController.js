@@ -5,8 +5,10 @@ const handleHelloWorld = (req, res) => {
   return res.render("home.ejs", { name });
 };
 
-const handleUserPage = (req, res) => {
-  return res.render("user.ejs");
+const handleUserPage = async (req, res) => {
+  let users = await userService.getUserList();
+  // console.log("users: ", users);
+  return res.render("user.ejs", { users });
 };
 
 const handleCreateNewUser = (req, res) => {
@@ -14,8 +16,7 @@ const handleCreateNewUser = (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  // userService.createNewUser(email, username, password);
-  userService.getUserList();
+  userService.createNewUser(email, username, password);
 
   return res.send("Created User!");
 };

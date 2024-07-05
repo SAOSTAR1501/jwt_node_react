@@ -1,11 +1,6 @@
 import bcrypt from "bcrypt";
-import mysql from "mysql2";
-
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  database: "jwt_node_react",
-});
+import mysql from "mysql2/promise";
+import bluebird from "bluebird";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -18,25 +13,43 @@ const hashPassword = (userPassword) => {
 const createNewUser = (email, username, password) => {
   let hashedPassword = hashPassword(password);
 
-  connection.query(
-    "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
-    [email, username, hashedPassword],
-    function (err, results, fields) {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
+  //   connection.query(
+  //     "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
+  //     [email, username, hashedPassword],
+  //     function (err, results, fields) {
+  //       if (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   );
 };
 
-const getUserList = () => {
+const getUserList = async () => {
   let users = [];
-  connection.query("SELECT * FROM users", function (err, results, fields) {
-    if (err) {
-      console.log(err);
-    }
-    console.log("users: ", results);
+  //   return connection.query(
+  //     "SELECT * FROM users",
+  //     function (err, results, fields) {
+  //       if (err) {
+  //         console.log(err);
+  //         return users;
+  //       }
+  //       users = results;
+  //       console.log(">> run get user list: ", users);
+  //       return users;
+  //     }
+  //   );
+  const connection = await mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    database: "jwt_node_react",
+    Promise: bluebird,
   });
+  try {
+    const [rows] = await connection.execute("SELECT * FROM users");
+    return rows;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 module.exports = {
