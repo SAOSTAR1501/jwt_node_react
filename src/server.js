@@ -1,10 +1,10 @@
 import express from "express";
 import configViewEngine from "./config/viewEngine";
 import initWebRoutes from "./routes/web";
+require("dotenv").config();
 
 import bodyParser from "body-parser";
-
-require("dotenv").config();
+import connection from "./config/connnectDB";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //init web routes
 initWebRoutes(app);
-
+connection();
 app.listen(PORT, () => {
   console.log("JWT backend is running on port " + PORT);
 });
