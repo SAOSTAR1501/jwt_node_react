@@ -7,8 +7,7 @@ const handleHelloWorld = (req, res) => {
 
 const handleUserPage = async (req, res) => {
   let users = await userService.getUserList();
-  // console.log("users: ", users);
-  await userService.deleteUser(8);
+
   return res.render("user.ejs", { users });
 };
 
@@ -23,7 +22,7 @@ const handleCreateNewUser = (req, res) => {
 };
 
 const handleDeleteUser = async (req, res) => {
-  console.log(" >>> check id: ", req.params.id);
+  // console.log(" >>> check id: ", req.params.id);
 
   await userService.deleteUser(req.params.id);
   return res.redirect("/user");
@@ -33,10 +32,7 @@ const getUpdateUserPage = async (req, res) => {
   let id = req.params.id;
 
   let user = await userService.getUserById(id);
-  let userData = {};
-  if (user && user.length > 0) {
-    userData = user[0];
-  }
+  let userData = user;
 
   return res.render("user-update.ejs", { userData });
 };

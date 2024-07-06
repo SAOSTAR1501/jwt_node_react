@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import mysql from "mysql2/promise";
 import bluebird from "bluebird";
+import db from "../models/index";
+import { where } from "sequelize";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -12,89 +14,41 @@ const hashPassword = (userPassword) => {
 
 const createNewUser = async (email, username, password) => {
   let hashedPassword = hashPassword(password);
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt_node_react",
-    Promise: bluebird,
-  });
+
   try {
-    const [rows] = await connection.execute(
-      "INSERT INTO user (email, username, password) VALUES (?, ?, ?)",
-      [email, username, hashedPassword]
-    );
+    db.User.create({
+      email: email,
+      username: username,
+      password: hashedPassword,
+    });
   } catch (err) {
     console.log("Error at create new user: ", err);
   }
 };
 
 const getUserList = async () => {
-  let user = [];
+  let users = [];
 
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt_node_react",
-    Promise: bluebird,
-  });
-  try {
-    const [rows] = await connection.execute("SELECT * FROM user");
-    return rows;
-  } catch (err) {
-    console.log(err);
-  }
+  users = await db.User.findAll();
+  return users;
 };
 
 const deleteUser = async (id) => {
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt_node_react",
-    Promise: bluebird,
-  });
-  try {
-    const [rows] = await connection.execute("DELETE FROM user WHERE id = ?", [
-      id,
-    ]);
-    return rows;
-  } catch (err) {
-    console.log(err);
-  }
+  await db.User.destroy({ where: { id: id } });
 };
 
 const getUserById = async (id) => {
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt_node_react",
-    Promise: bluebird,
-  });
-  try {
-    const [rows] = await connection.execute("SELECT * FROM user WHERE id = ?", [
-      id,
-    ]);
-    return rows;
-  } catch (err) {
-    console.log(err);
-  }
+  let user = await db.User.findOne({ where: { id: id } });
+  return user.get({ plain: true });
 };
 
 const updateUserInfor = async (email, username, id) => {
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt_node_react",
-    Promise: bluebird,
-  });
-  try {
-    const [rows] = await connection.execute(
-      "UPDATE user SET email = ?, username = ? WHERE id = ? ",
-      [email, username, id]
-    );
-    return rows;
-  } catch (err) {
-    console.log(err);
-  }
+  await db.User.update(
+    { email: email, username: username },
+    {
+      where: { id: id },
+    }
+  );
 };
 
 module.exports = {

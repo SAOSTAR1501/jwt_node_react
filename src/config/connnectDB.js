@@ -3,6 +3,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize("jwt_node_react", "root", null, {
   host: "localhost",
   dialect: "mysql",
+  logging: false,
 });
 
 const connection = async () => {
