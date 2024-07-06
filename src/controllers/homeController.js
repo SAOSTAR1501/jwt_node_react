@@ -38,7 +38,6 @@ const getUpdateUserPage = async (req, res) => {
     userData = user[0];
   }
 
-  console.log("get user: ", user);
   return res.render("user-update.ejs", { userData });
 };
 

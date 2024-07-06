@@ -31,18 +31,6 @@ const createNewUser = async (email, username, password) => {
 const getUserList = async () => {
   let users = [];
 
-  //   return connection.query(
-  //     "SELECT * FROM users",
-  //     function (err, results, fields) {
-  //       if (err) {
-  //         console.log(err);
-  //         return users;
-  //       }
-  //       users = results;
-  //       console.log(">> run get user list: ", users);
-  //       return users;
-  //     }
-  //   );
   const connection = await mysql.createConnection({
     host: "localhost",
     user: "root",
