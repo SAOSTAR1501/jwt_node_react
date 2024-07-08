@@ -1,0 +1,72 @@
+import { where } from "sequelize";
+import db from "../models/index";
+import bcrypt from "bcrypt";
+
+const salt = bcrypt.genSaltSync(10);
+
+const hashPassword = (userPassword) => {
+  let hashedPassword = bcrypt.hashSync(userPassword, salt);
+
+  return hashedPassword;
+};
+
+const checkEmailExist = async (email) => {
+  let user = await db.User.findOne({ where: { email: email } });
+  if (user) return true;
+  return false;
+};
+const checkPhoneExist = async (phone) => {
+  let user = await db.User.findOne({ where: { phone: phone } });
+  if (user) return true;
+  return false;
+};
+
+const registerNewUser = async (rawUserData) => {
+  try {
+    //check email/phonenumber are exist
+    let isEmailExisted = await checkEmailExist(rawUserData.email);
+    if (isEmailExisted === true) {
+      return {
+        EM: "Email already exists.",
+        EC: 1,
+      };
+    }
+    let isPhoneExisted = await checkPhoneExist(rawUserData.phone);
+    if (isPhoneExisted === true) {
+      return {
+        EM: "Phone number is already in use.",
+        EC: 1,
+      };
+    }
+
+    if (rawUserData.password && rawUserData.password.length < 4) {
+      return {
+        EM: "Your password must have at least 4 characters.",
+        EC: -1,
+      };
+    }
+    //hash user password
+    let hashedPassword = hashPassword(rawUserData.password);
+    //create new user
+    await db.User.create({
+      email: rawUserData.email,
+      phone: rawUserData.phone,
+      username: rawUserData.username,
+      password: hashedPassword,
+    });
+    return {
+      EM: "A user created successfully!",
+      EC: 0,
+    };
+  } catch (err) {
+    console.log("error: ", err);
+    return {
+      EM: "Something wrong in service...",
+      EC: -2,
+    };
+  }
+};
+
+module.exports = {
+  registerNewUser,
+};
